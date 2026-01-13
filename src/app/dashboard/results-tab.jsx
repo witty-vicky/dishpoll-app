@@ -12,6 +12,11 @@ const RANK_POINTS = {
 export default function ResultsTab() {
     const { dishes, votesByUser, currentUser } = useApp();
 
+    const currentUserVotes = currentUser ? votesByUser[currentUser.id] : null;
+    const hasAnyVote = currentUserVotes
+        ? Object.values(currentUserVotes).some(Boolean)
+        : false;
+
     // Calculate total points per dish
     const results = dishes.map((dish) => {
         let points = 0;
@@ -35,6 +40,17 @@ export default function ResultsTab() {
     const topThree = sortedResults.slice(0, 3);
     const rest = sortedResults.slice(3);
 
+    if (!hasAnyVote) {
+        return (
+            <div className="rounded-2xl border bg-muted/30 p-6 text-center">
+                <div className="text-lg font-semibold">You haven’t picked any dish yet</div>
+                <div className="mt-1 text-sm text-muted-foreground">
+                    Please select your favourite dishes first to see the leaderboard.
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="space-y-8">
             {topThree.length > 0 && (
@@ -54,7 +70,7 @@ export default function ResultsTab() {
                                     <ResultCard
                                         dish={dish}
                                         rank={rank}
-                                        currentUserVotes={votesByUser[currentUser.id]}
+                                        currentUserVotes={currentUserVotes}
                                     />
                                 </div>
                             );
@@ -72,7 +88,7 @@ export default function ResultsTab() {
                                 key={dish.id}
                                 dish={dish}
                                 rank={idx + 4}
-                                currentUserVotes={votesByUser[currentUser.id]}
+                                currentUserVotes={currentUserVotes}
                             />
                         ))}
                     </div>

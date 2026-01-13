@@ -1,9 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Award, Crown, Medal, X } from "lucide-react";
-import Image from "next/image";
 import { toast } from "sonner";
 import { useApp } from "../providers/app-provider";
 
@@ -36,12 +36,10 @@ export default function DishCard({ dish }) {
 
             const updated = { ...votes };
 
-            // remove dish from previous rank
             Object.keys(updated).forEach((r) => {
                 if (updated[r] === dish.id) updated[r] = null;
             });
 
-            // assign new rank
             if (rank) updated[rank] = dish.id;
 
             return { ...prev, [currentUser.id]: updated };
